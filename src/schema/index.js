@@ -173,6 +173,41 @@ var playlistType = new GraphQLObjectType({
   })
 });
 
+var commentType = new GraphQLObjectType({
+  name: 'Comment',
+  fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'The identifier of the comment.',
+      resolve: (comment) => comment.id
+    },
+    body: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'The HTML body of the comment.',
+      resolve: (comment) => comment.body
+    },
+    timestamp: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: 'The comment is on this point in the track. (milliseconds)',
+      resolve: (comment) => comment.timestamp
+    },
+    userConnection: {
+      type: userType,
+      description: 'The user who made the comment.',
+      resolve: (root) => {
+        return JSONDataWithPath('/users/' + root.user_id);
+      }
+    },
+    trackConnection: {
+      type: trackType,
+      description: 'The track this comment is on.',
+      resolve: (root) => {
+        return JSONDataWithPath('/tracks/' + root.track_id);
+      }
+    }
+  })
+});
+
 var rootType = new GraphQLObjectType({
   name: 'Root',
   fields: () => ({
@@ -213,6 +248,20 @@ var rootType = new GraphQLObjectType({
       resolve: (_, args) => {
         if (args.id !== undefined && args.id !== null) {
           return JSONDataWithPath('/playlists/' + args.id);
+        } else {
+          throw new Error('must provide id');
+        }
+      }
+    },
+    comment: {
+      type: commentType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) }
+      },
+      description: 'Find comment by id',
+      resolve: (_, args) => {
+        if (args.id !== undefined && args.id !== null) {
+          return JSONDataWithPath('/comments/' + args.id);
         } else {
           throw new Error('must provide id');
         }
