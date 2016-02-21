@@ -3,7 +3,7 @@ import https from 'https';
 function optionalAuthHeader() {
   var token = process.env.OAUTH_TOKEN;
   if (token && token !== '') {
-    return { "Authorization": `OAuth ${token}` };
+    return { Authorization: `OAuth ${token}` };
   }
   return {};
 }
