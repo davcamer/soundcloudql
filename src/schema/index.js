@@ -59,6 +59,18 @@ var trackType = new GraphQLObjectType({
       resolve: (root) => {
         return JSONDataWithPath('/users/' + root.user_id);
       }
+    },
+    commentsConnection: {
+      type: new GraphQLList(commentType),
+      args: {
+        limit: { type: GraphQLInt }
+      },
+      description: 'The comments posted on this track.',
+      resolve: (root, args) => {
+        return JSONDataWithPath(
+          '/tracks/' + root.id +
+          '/comments?limit=' + args.limit);
+      }
     }
   })
 });
@@ -117,6 +129,18 @@ var userType = new GraphQLObjectType({
         return JSONDataWithPath(
           '/users/' + root.id +
           '/tracks?limit=' + args.limit);
+      }
+    },
+    commentsConnection: {
+      type: new GraphQLList(commentType),
+      args: {
+        limit: { type: GraphQLInt }
+      },
+      description: 'The comments posted by this user.',
+      resolve: (root, args) => {
+        return JSONDataWithPath(
+          '/users/' + root.id +
+          '/comments?limit=' + args.limit);
       }
     }
   })
