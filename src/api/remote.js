@@ -1,4 +1,4 @@
-import http from 'http';
+import https from 'https';
 
 export function apiJSONDataWithPath(path) {
   return new Promise( function (resolve) {
@@ -8,7 +8,7 @@ export function apiJSONDataWithPath(path) {
     } else {
       pathWithClientId = path + '?client_id=' + process.env.CLIENT_ID;
     }
-    http.get({
+    https.get({
       host: 'api.soundcloud.com',
       path: pathWithClientId
     }, function (response) {
