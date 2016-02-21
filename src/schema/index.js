@@ -13,6 +13,7 @@ import TrackType from './types/track';
 import UserType from './types/user';
 import PlaylistType from './types/playlist';
 import CommentType from './types/comment';
+import MeType from './types/me';
 
 var rootType = new GraphQLObjectType({
   name: 'Root',
@@ -71,6 +72,13 @@ var rootType = new GraphQLObjectType({
         } else {
           throw new Error('must provide id');
         }
+      }
+    },
+    me: {
+      type: MeType,
+      description: 'Current user, otherwise null',
+      resolve: () => {
+        return JSONDataWithPath('/me');
       }
     }
   })

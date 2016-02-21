@@ -1,5 +1,13 @@
 import https from 'https';
 
+function optionalAuthHeader() {
+  var token = process.env.OAUTH_TOKEN;
+  if (token && token !== '') {
+    return { "Authorization": `OAuth ${token}` };
+  }
+  return {};
+}
+
 export function apiJSONDataWithPath(path) {
   return new Promise( function (resolve) {
     var pathWithClientId = '';
@@ -10,7 +18,8 @@ export function apiJSONDataWithPath(path) {
     }
     https.get({
       host: 'api.soundcloud.com',
-      path: pathWithClientId
+      path: pathWithClientId,
+      headers: optionalAuthHeader()
     }, function (response) {
       console.log(this.path);
       var body = '';
